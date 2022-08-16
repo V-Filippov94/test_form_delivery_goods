@@ -1,0 +1,54 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <meta charset="UTF-8">
+    <title>Форма</title>
+</head>
+<body>
+<main>
+    {% block delivery_form %}
+    <form action="" method="post" class="form">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <table class="table" id="table">
+            {{ address_issuance.management_form }}
+            {% for form in address_issuance.forms %}
+            {% if forloop.first %}
+            <thead>
+                <tr>
+                    {% for field in form.visible_fields %}
+                    <th>{{ field.label|capfirst }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            {% endif %}
+
+            <tr>
+                {% for field in form.visible_fields %}
+                <td>
+                    {% if forloop.first %}
+                    {% for hidden in form.hidden_fields %}
+                    {{ hidden }}
+                    {% endfor %}
+                    {% endif %}
+
+                    {{ field.errors.as_ul }}
+                    {{ field }}
+                </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
+        <input type="submit" value="Отправить форму">
+        <input type="button" id="btn_delivery" value="Добавить пункт выдачи">
+    </form>
+
+    {% endblock %}
+</main>
+
+<script src="{% static 'js/show_point.js' %}"></script>
+</body>
+</html>
